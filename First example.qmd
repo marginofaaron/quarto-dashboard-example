@@ -1,0 +1,175 @@
+---
+title: "Palmer Penguins"
+subtitle: "An example dashboard"
+logo: "logo.png"
+theme:
+  - flatly
+format: 
+  dashboard:
+    orientation: columns
+---
+
+```{r}
+#| output: FALSE
+#| echo: FALSE
+
+# Load libraries 
+library(shiny) 
+library(palmerpenguins) 
+library(tidyverse) 
+library(DT) 
+library(plotly)
+
+```
+
+
+
+# Dashboard
+
+## Column
+
+### Row
+
+
+```{r}
+#| component: valuebox
+
+list(
+  value = nrow(penguins),
+  title = "Number of penguins observed",
+  color = "blue",
+  icon = "bar-chart"
+)
+
+```
+
+### Row
+
+```{r}
+#| component: valuebox
+
+list(
+  value = length(unique(penguins$species)),
+  title = "Number of species in sample",
+  color = "green",
+  icon = "pie-chart"
+)
+```
+
+
+### Row
+
+```{r}
+#| component: valuebox
+
+list(
+  value = length(unique(penguins$island)),
+  title = "Number of islands in sample",
+  color = "red",
+  icon = "pie-chart"
+)
+```
+
+
+
+## Column {.tabset}
+
+```{r}
+#| title: Flipper Length
+
+# make an interactive ggplot scatterplot of the flipper length by species
+p <- ggplot(penguins, aes(x = flipper_length_mm, fill = species)) +
+  geom_histogram(binwidth = 2, alpha = 0.64) +
+  labs(title = "Flipper length by species",
+       x = "Flipper length (mm)",
+       y = "Count",
+       fill = "Species") +
+  scale_fill_manual(values = c("#1b9e77", "#d95f02", "#7570b3")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)
+  )
+
+# make the plot interactive
+plotly::ggplotly(p)
+
+```
+
+
+```{r}
+#| title: Body Mass
+
+# Violin plot of body mass by species with semi-transparent colors (colors should be green, orange, and purple)
+
+p2 <- ggplot(penguins, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_violin(alpha = 0.7) +
+  labs(title = "Body mass by species",
+       x = "Species",
+       y = "Body mass (g)",
+       fill = "Species") +
+  scale_fill_manual(values = c("#1b9e77", "#d95f02", "#7570b3")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)
+  )
+
+
+# make the plot interactive
+plotly::ggplotly(p2)
+
+```
+
+
+```{r}
+#| title: Bill Length vs. Flipper Length
+
+# Scatterplot of bill length vs flipper length colored by species (colors should be green, orange, and purple)
+
+p3 <- ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point(alpha = 0.7) +
+  labs(title = "Scatterplot of bill length vs flipper length",
+       x = "Bill length (mm)",
+       y = "Flipper length (mm)",
+       color = "Species") +
+  scale_color_manual(values = c("#1b9e77", "#d95f02", "#7570b3")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)
+  )
+
+# make the plot interactive
+plotly::ggplotly(p3)
+
+```
+
+
+# Data
+
+## Column {width=20%}
+You can view the data that was used to create this dashboard in the table. Click the button to download the data as a CSV file.
+
+## Column {width=80%}
+
+```{r}
+datatable( palmerpenguins::penguins, 
+           extensions = 'Buttons', 
+           options = 
+             list( 
+               dom = 'Bfrtip', 
+               buttons = list( 
+                 list(extend = 'csv', text = 'Click here to download CSV') ) 
+               ) 
+           )
+
+```
+
+
+# About {width=70%}
+
+The Palmer Penguins dataset is a popular dataset for data exploration and visualization examples. It contains data on three species of penguins collected from three islands in the Palmer Archipelago, Antarctica. 
+
+Data was collected by [Dr. Kristen Gorman](https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php) and the Palmer Station, Antarctica LTER. 
+
+The dataset was made available by the `palmerpenguins` R package,  developed by Allison Horst, Alison Hill, and Dr. Kristen Gorman.
+
+For more information about the dataset and the package, you can visit the [package page](https://allisonhorst.github.io/palmerpenguins/). 
+
+
+
